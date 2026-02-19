@@ -1,0 +1,23 @@
+{
+  "name": "bg-teach",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:backend": "yarn workspace @bg-teach/backend dev",
+    "dev:frontend": "yarn workspace @bg-teach/frontend dev",
+    "build": "yarn workspaces run build",
+    "lint": "eslint packages/backend/src packages/shared/src"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@total-typescript/ts-reset": "^0.6.1",
+    "@types/node": "^25.2.3",
+    "eslint": "^10.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.0"
+  }
+}
