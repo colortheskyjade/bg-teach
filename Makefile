@@ -4,15 +4,13 @@
 dd: docker-dev
 
 dev:
-	@echo "Starting MongoDB and dev servers..."
+	@echo "Starting MongoDB and dev server..."
 	docker-compose up -d mongo
-	MONGODB_URI=mongodb://localhost:27017/bg-teach_dev yarn workspace @bg-teach/backend dev &
-	yarn workspace @bg-teach/frontend dev &
-	@echo "Dev servers started in the background. Check terminal output for details."
+	MONGODB_URI=mongodb://localhost:27017/bg-teach_dev npm run dev
 
 dev-stop:
 	@echo "Stopping dev servers..."
-	@pkill -f "yarn workspace @bg-teach" || echo "No processes found."
+	@pkill -f "next dev" || echo "No processes found."
 
 docker-dev:
 	@echo "Starting Dockerized backend, frontend, and MongoDB..."
@@ -30,7 +28,6 @@ stop:
 clean:
 	@echo "Cleaning generated files and directories..."
 	rm -rf node_modules
-	rm -rf packages/frontend/node_modules
-	rm -rf packages/frontend/.next
-	rm -rf packages/frontend/out
+	rm -rf .next
+	rm -rf out
 	@echo "Clean up complete."

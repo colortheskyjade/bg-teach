@@ -38,7 +38,11 @@ const BoardGamesPage = () => {
     try {
       const response = await fetch('/api/boardgames');
       const data = await response.json();
-      setBoardGames(data);
+      if (Array.isArray(data)) {
+        setBoardGames(data);
+      } else {
+        console.error('Data is not an array:', data);
+      }
     } catch (error) {
       console.error('Error fetching board games:', error);
       toast({

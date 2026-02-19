@@ -1,6 +1,5 @@
 import { getModelForClass, prop } from '@typegoose/typegoose';
-import { IBoardGame } from '../interfaces/BoardGame';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 export class BoardGame {
   @prop({ required: true, unique: true })
@@ -12,6 +11,6 @@ export class BoardGame {
 
 export type BoardGameDocument = BoardGame & Document;
 
-const BoardGameModel = getModelForClass(BoardGame);
+const BoardGameModel = mongoose.models.BoardGame || getModelForClass(BoardGame);
 
 export default BoardGameModel;

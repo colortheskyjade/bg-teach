@@ -2,22 +2,33 @@
   "name": "bg-teach",
   "version": "1.0.0",
   "private": true,
-  "license": "MIT",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
-    "dev:backend": "yarn workspace @bg-teach/backend dev",
-    "dev:frontend": "yarn workspace @bg-teach/frontend dev",
-    "build": "yarn workspaces run build",
-    "lint": "eslint packages/backend/src packages/shared/src"
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/react": "^2.5.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@typegoose/typegoose": "^13.1.0",
+    "ai": "^6.0.91",
+    "framer-motion": "^12.34.2",
+    "mongoose": "^9.2.1",
+    "next": "^16.1.6",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@total-typescript/ts-reset": "^0.6.1",
-    "@types/node": "^25.2.3",
-    "eslint": "^10.0.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20.19.33",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5.9.3"
   }
 }

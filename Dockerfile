@@ -5,15 +5,15 @@ WORKDIR /app
 # Development stage
 FROM base AS development
 COPY . .
-RUN yarn install
+RUN npm install
 EXPOSE 3000
-CMD ["yarn", "workspace", "@bg-teach/frontend", "dev"]
+CMD ["npm", "run", "dev"]
 
 # Builder stage for production
 FROM base AS builder
 COPY . .
-RUN yarn install --frozen-lockfile
-RUN yarn workspace @bg-teach/frontend build
+RUN npm install
+RUN npm run build
 
 # Production image
 FROM base AS final
@@ -32,13 +32,13 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copy built artifacts from standalone output
 # Standalone mode already includes node_modules needed for runtime
-COPY --from=builder /app/packages/frontend/.next/standalone ./
-COPY --from=builder /app/packages/frontend/.next/static ./packages/frontend/.next/static
-COPY --from=builder /app/packages/frontend/public ./packages/frontend/public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 USER nextjs
 
 EXPOSE 3000
 
 # In standalone mode, server.js is at the root of the standalone folder
-CMD ["node", "packages/frontend/server.js"]
+CMD ["node", "server.js"]
