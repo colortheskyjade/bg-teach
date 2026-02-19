@@ -4,8 +4,9 @@
 dd: docker-dev
 
 dev:
-	@echo "Starting backend and frontend dev servers..."
-	yarn workspace @bg-teach/backend dev &
+	@echo "Starting MongoDB and dev servers..."
+	docker-compose up -d mongo
+	MONGODB_URI=mongodb://localhost:27017/bg-teach_dev yarn workspace @bg-teach/backend dev &
 	yarn workspace @bg-teach/frontend dev &
 	@echo "Dev servers started in the background. Check terminal output for details."
 
@@ -15,7 +16,7 @@ dev-stop:
 
 docker-dev:
 	@echo "Starting Dockerized backend, frontend, and MongoDB..."
-	docker-compose up -d
+	docker-compose up --build -d
 
 logs:
 	docker-compose logs -f

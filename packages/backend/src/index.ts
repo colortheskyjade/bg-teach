@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import connectDB from './database';
 import dotenv from 'dotenv';
 import BoardGameModel from './models/BoardGame';
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3001;
 
 connectDB();
 
+app.use(cors());
 app.use(express.json());
 
 // Create a new board game

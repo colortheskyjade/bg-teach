@@ -1,17 +1,22 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
 
 WORKDIR /app
 
-# Copy the entire project source code
+# Development stage
+FROM base AS development
 COPY . .
+RUN yarn install
+EXPOSE 3000
+CMD ["yarn", "workspace", "@bg-teach/frontend", "dev"]
 
-# Install dependencies and build
+# Builder stage for production
+FROM base AS builder
+COPY . .
 RUN yarn install --frozen-lockfile
-RUN yarn workspace @bg-teach/shared build
 RUN yarn workspace @bg-teach/frontend build
 
 # Production image
-FROM node:20-alpine AS final
+FROM base AS final
 
 WORKDIR /app
 

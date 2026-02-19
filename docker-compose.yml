@@ -3,10 +3,15 @@ services:
     build:
       context: .
       dockerfile: packages/backend/Dockerfile
+      target: development
     ports:
       - "3001:3001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/packages/backend/node_modules
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=3001
       - MONGODB_URI=mongodb://mongo:27017/bg-teach_dev
     depends_on:
@@ -16,10 +21,15 @@ services:
     build:
       context: .
       dockerfile: packages/frontend/Dockerfile
+      target: development
     ports:
       - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/packages/frontend/node_modules
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     depends_on:
       - backend
 
