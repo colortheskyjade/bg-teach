@@ -1,5 +1,7 @@
 
-.PHONY: dev clean docker-dev
+.PHONY: dev dev-stop clean docker-dev logs start stop
+
+dd: docker-dev
 
 dev:
 	@echo "Starting backend and frontend dev servers..."
@@ -7,9 +9,22 @@ dev:
 	yarn workspace @bg-teach/frontend dev &
 	@echo "Dev servers started in the background. Check terminal output for details."
 
+dev-stop:
+	@echo "Stopping dev servers..."
+	@pkill -f "yarn workspace @bg-teach" || echo "No processes found."
+
 docker-dev:
 	@echo "Starting Dockerized backend, frontend, and MongoDB..."
-	docker-compose up
+	docker-compose up -d
+
+logs:
+	docker-compose logs -f
+
+start:
+	docker-compose start
+
+stop:
+	docker-compose stop
 
 clean:
 	@echo "Cleaning generated files and directories..."

@@ -15,7 +15,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <nav>
+            <a href="/">Home</a> | <a href="/boardgames">Board Games</a>
+          </nav>
+          {children}
+        </Providers>
       </body>
     </html>
   );

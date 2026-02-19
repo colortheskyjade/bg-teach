@@ -1,44 +1,39 @@
-FROM node:20-alpine AS base
+FROM node:20-alpine AS builder
 
-# Install dependencies
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package.json yarn.lock ./
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/frontend/package.json ./packages/frontend/
-RUN yarn install --frozen-lockfile
 
-# Build shared and frontend
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
-COPY --from=deps /app/packages/frontend/node_modules ./packages/frontend/node_modules
+# Copy the entire project source code
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED=1
-
+# Install dependencies and build
+RUN yarn install --frozen-lockfile
 RUN yarn workspace @bg-teach/shared build
 RUN yarn workspace @bg-teach/frontend build
 
 # Production image
-FROM base AS runner
+FROM node:20-alpine AS final
+
 WORKDIR /app
+
+# Set production environment variables
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
+# Create user and group
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/packages/frontend/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/packages/frontend/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/packages/frontend/.next/static ./.next/static
+# Copy built artifacts from standalone output
+# Standalone mode already includes node_modules needed for runtime
+COPY --from=builder /app/packages/frontend/.next/standalone ./
+COPY --from=builder /app/packages/frontend/.next/static ./packages/frontend/.next/static
+COPY --from=builder /app/packages/frontend/public ./packages/frontend/public
 
 USER nextjs
 
 EXPOSE 3000
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# In standalone mode, server.js is at the root of the standalone folder
+CMD ["node", "packages/frontend/server.js"]

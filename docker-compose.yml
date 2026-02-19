@@ -8,7 +8,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - MONGODB_URI=mongodb://mongo:27017/mydatabase_dev
+      - MONGODB_URI=mongodb://mongo:27017/bg-teach_dev
     depends_on:
       - mongo
 
@@ -29,6 +29,13 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:8080
 
 volumes:
   mongo-data:

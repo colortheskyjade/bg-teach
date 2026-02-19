@@ -35,6 +35,19 @@ app.get('/api/boardgames', async (_req, res) => {
   }
 });
 
+app.delete('/api/boardgames/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedBoardGame = await BoardGameModel.findByIdAndDelete(id);
+    if (!deletedBoardGame) {
+      return res.status(404).json({ message: 'Board game not found' });
+    }
+    res.status(200).json({ message: 'Board game deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });

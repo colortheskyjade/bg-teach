@@ -1,40 +1,44 @@
-FROM node:20-alpine AS base
+FROM node:20-alpine AS builder
 
-# Install dependencies
-FROM base AS deps
 WORKDIR /app
-COPY package.json yarn.lock ./
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/backend/package.json ./packages/backend/
-RUN yarn install --frozen-lockfile --production=false
 
-# Build shared and backend
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
-COPY --from=deps /app/packages/backend/node_modules ./packages/backend/node_modules
+# Copy the entire project source code
 COPY . .
+
+# Install dependencies and build
+RUN yarn install --frozen-lockfile
 RUN yarn workspace @bg-teach/shared build
 RUN yarn workspace @bg-teach/backend build
 
 # Production image
-FROM base AS runner
-WORKDIR /app
-ENV NODE_ENV=production
+FROM node:20-alpine AS final
 
+WORKDIR /app
+
+# Set production environment variables
+ENV NODE_ENV=production
+ENV PORT=3001
+
+# Copy the entire workspace structure for production install
+# This is necessary for workspace links to work correctly
+COPY --from=builder /app/package.json /app/yarn.lock ./
+COPY --from=builder /app/packages/backend/package.json ./packages/backend/package.json
+COPY --from=builder /app/packages/shared/package.json ./packages/shared/package.json
+
+# Install ONLY production dependencies for the entire workspace
+RUN yarn install --frozen-lockfile --production --network-timeout 100000
+
+# Copy built artifacts
+COPY --from=builder /app/packages/backend/dist ./packages/backend/dist
+COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
+
+# Create user and group
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 expressjs
-
-COPY --from=builder /app/packages/backend/dist ./dist
-COPY --from=builder /app/packages/backend/package.json ./
-COPY --from=builder /app/packages/shared/dist ./node_modules/@bg-teach/shared/dist
-COPY --from=builder /app/packages/shared/package.json ./node_modules/@bg-teach/shared/
-COPY --from=deps /app/node_modules ./node_modules
 
 USER expressjs
 
 EXPOSE 3001
-ENV PORT=3001
 
-CMD ["node", "dist/index.js"]
+# Entry point from the root of the workspace
+CMD ["node", "packages/backend/dist/index.js"]
