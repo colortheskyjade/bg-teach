@@ -1,19 +1,19 @@
-output "backend_url" {
-  description = "Backend API URL"
-  value       = "http://localhost:${var.backend_port}"
-}
-
-output "frontend_url" {
-  description = "Frontend URL"
+output "app_url" {
+  description = "Application URL"
   value       = "http://localhost:${var.frontend_port}"
 }
 
-output "backend_container_id" {
-  description = "Backend container ID"
-  value       = docker_container.backend.id
+output "mongo_url" {
+  description = "MongoDB URL"
+  value       = "mongodb://localhost:27017"
 }
 
-output "frontend_container_id" {
-  description = "Frontend container ID"
-  value       = docker_container.frontend.id
+output "app_container_id" {
+  description = "App container ID"
+  value       = docker_container.app.id
+}
+
+output "mongo_container_id" {
+  description = "MongoDB container ID"
+  value       = docker_container.mongo.id
 }

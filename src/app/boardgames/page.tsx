@@ -19,11 +19,13 @@ import {
   useToast,
   Divider,
 } from '@chakra-ui/react';
-import { DeleteIcon, ExternalLinkIcon } from '@chakra-ui/icons';
+import { DeleteIcon, ExternalLinkIcon, EditIcon } from '@chakra-ui/icons';
+import { useRouter } from 'next/navigation';
 
 interface BoardGame {
   id: string;
   name: string;
+  slug: string;
   bggUrl: string;
 }
 
@@ -33,6 +35,7 @@ const BoardGamesPage = () => {
   const [newBggUrl, setNewBggUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const router = useRouter();
 
   const fetchBoardGames = async () => {
     try {
@@ -191,13 +194,22 @@ const BoardGamesPage = () => {
                         BGG Link <ExternalLinkIcon mx="2px" />
                       </Link>
                     </Box>
-                    <IconButton
-                      aria-label="Delete board game"
-                      icon={<DeleteIcon />}
-                      colorScheme="red"
-                      variant="ghost"
-                      onClick={() => handleDeleteBoardGame(game.id)}
-                    />
+                    <HStack>
+                      <IconButton
+                        aria-label="Edit board game"
+                        icon={<EditIcon />}
+                        colorScheme="blue"
+                        variant="ghost"
+                        onClick={() => router.push(`/boardgames/${game.slug || game.id}/edit`)}
+                      />
+                      <IconButton
+                        aria-label="Delete board game"
+                        icon={<DeleteIcon />}
+                        colorScheme="red"
+                        variant="ghost"
+                        onClick={() => handleDeleteBoardGame(game.id)}
+                      />
+                    </HStack>
                   </HStack>
                 </ListItem>
               ))}

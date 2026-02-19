@@ -5,6 +5,9 @@ export class BoardGame {
   @prop({ required: true, unique: true })
   public name!: string;
 
+  @prop({ required: true, unique: true, index: true })
+  public slug!: string;
+
   @prop({ required: true })
   public bggUrl!: string;
 }
