@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@bg-teach/shared": "1.0.0",
+    "@chakra-ui/react": "^2.5.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "ai": "^6.0.91",
+    "framer-motion": "^12.34.2",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"

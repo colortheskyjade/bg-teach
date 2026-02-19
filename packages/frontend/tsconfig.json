@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@chakra-ui/react": ["./node_modules/@chakra-ui/react"]
     }
   },
   "include": [
